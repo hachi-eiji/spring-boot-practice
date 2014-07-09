@@ -4,7 +4,10 @@ spring:
   datasource:
     driverClassName: com.mysql.jdbc.Driver
   jpa:
-    datasource: MySQL
+    hibernate:
+      ddl-auto: update
+      naming_strategy:  org.hibernate.cfg.ImprovedNamingStrategy
+    datasource: MYSQL
     show-sql: true
 ---
 
