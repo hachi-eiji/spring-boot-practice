@@ -1,0 +1,29 @@
+spring:
+  profiles:
+    active: local
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+  jpa:
+    datasource: MySQL
+    show-sql: true
+---
+
+spring:
+  profiles: local
+  datasource:
+    url: jdbc:mysql://localhost:13306/test?useUnicode=true&characterEncoding=utf-8
+    username: test
+    password: test
+server:
+  port: 8082
+
+---
+
+spring:
+  profles: development
+  datasource:
+    url: jdbc:mysql://localhost:13306/test?useUnicode=true&characterEncoding=utf-8
+    username: sa
+    password: hoge
+server:
+  port: 8084
