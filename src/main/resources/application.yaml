@@ -3,6 +3,12 @@ spring:
     active: local
   datasource:
     driverClassName: com.mysql.jdbc.Driver
+  mvc:
+    view:
+      suffix: .ftl
+  freemarker:
+    charset: utf8
+    cache: false
   jpa:
     hibernate:
       ddl-auto: update
@@ -14,9 +20,11 @@ spring:
 spring:
   profiles: local
   datasource:
-    url: jdbc:mysql://localhost:13306/test?useUnicode=true&characterEncoding=utf-8
-    username: test
-    password: test
+    url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: root
+memcached:
+  addresses: 127.0.0.1:11211,127.0.0.1:11212
 server:
   port: 8082
 

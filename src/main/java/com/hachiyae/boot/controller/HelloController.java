@@ -1,29 +1,24 @@
 package com.hachiyae.boot.controller;
 
+import com.hachiyae.boot.exception.ServiceException;
+import com.hachiyae.boot.serivce.MemcacheService;
+import com.hachiyae.boot.serivce.TestService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.orm.jpa.EntityScan;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.hachiyae.boot.serivce.TestService;
-
 
 @RestController
-@EnableAutoConfiguration
-@EnableJpaRepositories(basePackages = "com.hachiyae.boot.repository")
-@EntityScan(basePackages = "com.hachiyae.boot.entity")
-@ComponentScan(basePackages = "com.hachiyae.boot")
 public class HelloController {
     @Autowired
     private TestService testService;
+    @Autowired
+    private MemcacheService memcacheService;
 
     @RequestMapping(value = "/test/{id}")
     public Map<String, Object> test(@PathVariable Integer id) {
@@ -32,7 +27,31 @@ public class HelloController {
         return map;
     }
 
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(HelloController.class, args);
+    @RequestMapping(value = "/mem/{key}/{value}", method = RequestMethod.PUT)
+    public String store(@PathVariable String key, @PathVariable String value) {
+        return "success";
+    }
+
+    @RequestMapping(value = "/mem/{key}/i/{value}", method = RequestMethod.PUT)
+    public String store2(@PathVariable String key, @PathVariable Integer value) {
+        memcacheService.set(key, value);
+        return "success";
+    }
+
+    @RequestMapping(value = "/mem/{key}", method = RequestMethod.GET)
+    public String getFromCache(@PathVariable String key) {
+        return memcacheService.get(key, String.class);
+    }
+
+    @RequestMapping(value = "/e")
+    public String throwServiceException() {
+        throw new ServiceException("error");
+    }
+
+    @RequestMapping(value = "/e2")
+    public String nullexception() {
+        String str = null;
+        str.equals("hoge");
+        return "a";
     }
 }

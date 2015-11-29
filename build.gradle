@@ -1,0 +1,72 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+apply plugin: 'spring-boot'
+apply plugin: 'propdeps'
+apply plugin: 'propdeps-maven'
+apply plugin: 'propdeps-idea'
+apply plugin: 'propdeps-eclipse'
+
+group = 'com.hachiyae'
+version = '1.0-SNAPSHOT'
+
+description = """spring-boot sample project"""
+
+// エンコーディング
+def defaultEncoding = 'UTF-8'
+[compileJava, compileTestJava]*.options*.encoding = defaultEncoding
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+def springVersion = '1.3.0.RELEASE'
+
+repositories {
+    jcenter()
+    maven { url 'http://repo.spring.io/snapshot' }
+    maven { url 'http://repo.spring.io/milestone' }
+    maven { url 'http://repo.spring.io/plugins-release' }
+}
+buildscript {
+    repositories {
+        jcenter()
+        maven { url 'http://repo.spring.io/snapshot' }
+        maven { url 'http://repo.spring.io/milestone' }
+        maven { url 'http://repo.spring.io/plugins-release' }
+    }
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.3.0.RELEASE'
+        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7'
+    }
+}
+
+jar {
+    baseName = rootProject.name
+    version = version
+}
+
+// https://docs.spring.io/spring-boot/docs/current/reference/html/build-tool-plugins-gradle-plugin.html
+bootRepackage {
+    mainClass = 'com.hachiyae.boot.Main'
+}
+springBoot {
+    backupSource = false
+}
+
+dependencies {
+    compile(group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springVersion) {
+        exclude(module: 'spring-boot-starter-tomcat')
+    }
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: springVersion
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: springVersion
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: springVersion
+    compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: springVersion
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.12.6'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.30'
+    compile group: 'net.spy', name: 'spymemcached', version: '2.11.1'
+
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jetty', version: springVersion
+    optional 'org.springframework.boot:spring-boot-configuration-processor'
+    compileJava.dependsOn(processResources)
+}
